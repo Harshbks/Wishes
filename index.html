@@ -100,10 +100,16 @@
             opacity: 0; /* Start hidden */
             box-shadow: 0 0 5px rgba(0,0,0,0.1);
             z-index: 1; /* Below the card */
+            transform-origin: center center; /* For better rotation */
         }
 
-        .petal.type2 { background-color: #ffbbcc; } /* Lighter pink */
-        .petal.type3 { background-color: #ff5588; } /* Darker pink */
+        /* Different petal colors/styles */
+        .petal.pink { background-color: #ff88aa; }
+        .petal.light-pink { background-color: #ffbbcc; }
+        .petal.dark-pink { background-color: #ff5588; }
+        .petal.white { background-color: #ffffff; box-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        .petal.cherry { background-color: #f7cac9; border-radius: 60% 40% 60% 40% / 70% 30% 70% 30%; } /* More irregular shape */
+
         .petal.heart {
             background-color: #ff0077; /* Red heart */
             width: 25px; height: 25px;
@@ -134,14 +140,14 @@
     <button id="revealButton">A Special Message for My Chiku ❤️</button>
 
     <div class="confession-card" id="card">
-        <h1>For My Dearest Chiku,</h1>
+        <h1>For You Miss Chiku,</h1>
         
         <div class="emoji">💖✨🌹</div>
 
         <p>
             तुझे देखूं तो सब कुछ भूल जाता हूँ,<br>
             तेरे ख्यालों में ही खो जाता हूँ।<br>
-            ना जाने क्या जादू है तेरे आँखों में,<br>
+            ना जाने क्या जादू है तेरे चेहरे में,<br>
             हर पल बस तुझी को सोचता हूँ।
             <br><br>
             With all my heart,<br>
@@ -163,7 +169,7 @@
                 particleCount: 200,
                 spread: 120,
                 origin: { y: 0.6, x: 0.5 },
-                colors: ['#FFC0CB', '#FF69B4', '#FF1493', '#FF0077', '#FF88AA'], // Pinks and reds
+                colors: ['#FFC0CB', '#FF69B4', '#FF1493', '#FF0077', '#FF88AA', '#FFFFFF'], // Pinks, reds, and white
                 shapes: ['circle', 'heart'], // Include heart shapes
                 scalar: 0.8, // Smaller particles
             });
@@ -173,57 +179,37 @@
         });
 
         function createFallingPetals() {
-            const numPetals = 50; // Number of petals to fall continuously
-            const petalTypes = ['petal', 'petal type2', 'petal type3', 'petal heart'];
+            const numPetals = 100; // INCREASED: More petals
+            const petalTypes = ['petal pink', 'petal light-pink', 'petal dark-pink', 'petal white', 'petal cherry', 'petal heart']; // More variety
 
             for (let i = 0; i < numPetals; i++) {
-                const petal = document.createElement('div');
-                const type = petalTypes[Math.floor(Math.random() * petalTypes.length)];
-                petal.className = type;
-
-                const size = Math.random() * 20 + 10; // Petal size between 10px and 30px
-                petal.style.width = size + 'px';
-                petal.style.height = (type.includes('heart') ? size : Math.random() * size * 0.8 + size * 0.5) + 'px'; // Hearts are square, petals vary in height
-
-                petal.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
-                petal.style.animationDuration = Math.random() * 8 + 6 + 's'; // Fall duration 6-14s
-                petal.style.animationDelay = Math.random() * 5 + 's'; // Stagger start times
-                petal.style.opacity = Math.random() * 0.7 + 0.3; // Vary transparency
-                petal.style.transform = `rotate(${Math.random() * 360}deg)`; // Random initial rotation
-
-                body.appendChild(petal);
-
-                // Remove petals after they fall off screen to prevent clutter
-                petal.addEventListener('animationend', () => {
-                    petal.remove();
-                    // Recreate a petal to make it continuous
-                    createSinglePetal();
-                });
+                createSinglePetal(petalTypes); // Use the single petal creator
             }
         }
 
         // Function to create a single petal, used for continuous falling
-        function createSinglePetal() {
+        function createSinglePetal(petalTypes) {
             const petal = document.createElement('div');
-            const petalTypes = ['petal', 'petal type2', 'petal type3', 'petal heart'];
-            const type = petalTypes[Math.floor(Math.random() * petalTypes.length)];
+            // If petalTypes array is not passed, use a default
+            const types = petalTypes || ['petal pink', 'petal light-pink', 'petal dark-pink', 'petal white', 'petal cherry', 'petal heart']; 
+            const type = types[Math.floor(Math.random() * types.length)];
             petal.className = type;
 
-            const size = Math.random() * 20 + 10;
+            const size = Math.random() * 25 + 10; // INCREASED: Petal size between 10px and 35px
             petal.style.width = size + 'px';
             petal.style.height = (type.includes('heart') ? size : Math.random() * size * 0.8 + size * 0.5) + 'px';
 
             petal.style.left = Math.random() * 100 + 'vw';
-            petal.style.animationDuration = Math.random() * 8 + 6 + 's';
-            petal.style.animationDelay = '0s'; // No initial delay for new petals
-            petal.style.opacity = Math.random() * 0.7 + 0.3;
-            petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+            petal.style.animationDuration = Math.random() * 9 + 5 + 's'; // Varied fall duration 5-14s
+            petal.style.animationDelay = Math.random() * 6 + 's'; // Stagger start times more
+            petal.style.opacity = Math.random() * 0.8 + 0.2; // Wider range of transparency
+            petal.style.transform = `rotate(${Math.random() * 360}deg)`; // Random initial rotation
 
             body.appendChild(petal);
 
             petal.addEventListener('animationend', () => {
                 petal.remove();
-                createSinglePetal(); // Create another one
+                createSinglePetal(types); // Create another one with the same types
             });
         }
     </script>
