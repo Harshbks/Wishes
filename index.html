@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>For My Dearest Chiku</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
+    <style>
+        /* Basic setup */
+        body {
+            font-family: 'Georgia', serif; /* A more romantic font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            /* A soft, romantic background gradient */
+            background: linear-gradient(135deg, #fde4e1, #e6e6fa); /* Soft pink and lavender */
+            overflow: hidden; /* Hide scrollbars, essential for animations */
+            position: relative; /* Needed for absolute positioning of petals */
+        }
+
+        /* The 'Click Me' Button */
+        #revealButton {
+            font-size: 1.6rem;
+            padding: 22px 45px;
+            background-color: #ff69b4; /* Hot pink */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            transition: all 0.4s ease;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        #revealButton:hover {
+            transform: scale(1.06);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+            background-color: #e65a9e; /* Slightly darker pink */
+        }
+
+        /* The Confession Card */
+        .confession-card {
+            display: none; /* Hidden by default */
+            background: #ffffff;
+            border-radius: 25px; /* Slightly more rounded */
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+            padding: 50px;
+            max-width: 550px; /* Slightly wider */
+            text-align: center;
+            opacity: 0; /* Start fully transparent for fade-in */
+            transform: scale(0.9); /* Start slightly small for pop-in */
+            animation: fadeIn 1.2s ease-out forwards; /* Slower, smoother fade-in */
+            position: relative;
+            z-index: 10; /* Ensure card is above falling petals */
+        }
+
+        /* The fade-in and pop-in animation */
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .confession-card h1 {
+            color: #d90429; /* A strong romantic red */
+            font-family: 'Times New Roman', serif; /* Classic, elegant font */
+            font-size: 3.2rem; /* Bigger heading */
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .confession-card p {
+            font-size: 1.4rem; /* Increased font size for Shayari */
+            color: #444; /* Slightly softer text color */
+            line-height: 1.8; /* Increased line spacing */
+            margin-top: 25px;
+            font-style: italic; /* Makes Shayari look more artistic */
+        }
+
+        .emoji {
+            font-size: 4.5rem; /* Larger emojis */
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        /* Falling Petals CSS */
+        .petal {
+            position: absolute;
+            background-color: #ff88aa; /* Pink petal color */
+            border-radius: 50%;
+            pointer-events: none; /* Allows clicks to pass through */
+            animation: fall linear infinite;
+            opacity: 0; /* Start hidden */
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            z-index: 1; /* Below the card */
+        }
+
+        .petal.type2 { background-color: #ffbbcc; } /* Lighter pink */
+        .petal.type3 { background-color: #ff5588; } /* Darker pink */
+        .petal.heart {
+            background-color: #ff0077; /* Red heart */
+            width: 25px; height: 25px;
+            transform: rotate(-45deg);
+            border-radius: 50% 50% 0 50%;
+        }
+        .petal.heart::before,
+        .petal.heart::after {
+            content: '';
+            position: absolute;
+            width: 25px; height: 25px;
+            background-color: #ff0077;
+            border-radius: 50%;
+        }
+        .petal.heart::before { top: -12.5px; left: 0; }
+        .petal.heart::after { left: 12.5px; top: 0; }
+
+        @keyframes fall {
+            0% { transform: translate3d(0, -100px, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate3d(0, 100vh, 0) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="revealButton">A Special Message for My Chiku ❤️</button>
+
+    <div class="confession-card" id="card">
+        <h1>For My Dearest Chiku,</h1>
+        
+        <div class="emoji">💖✨🌹</div>
+
+        <p>
+            तुझे देखूं तो सब कुछ भूल जाता हूँ,<br>
+            तेरे ख्यालों में ही खो जाता हूँ।<br>
+            ना जाने क्या जादू है तेरे आँखों में,<br>
+            हर पल बस तुझी को सोचता हूँ।
+            <br><br>
+            With all my heart,<br>
+            - harsh
+        </p>
+    </div>
+
+    <script>
+        const button = document.getElementById('revealButton');
+        const card = document.getElementById('card');
+        const body = document.body;
+
+        button.addEventListener('click', () => {
+            button.style.display = 'none';
+            card.style.display = 'block';
+
+            // Special confetti burst (more like petals/hearts)
+            confetti({
+                particleCount: 200,
+                spread: 120,
+                origin: { y: 0.6, x: 0.5 },
+                colors: ['#FFC0CB', '#FF69B4', '#FF1493', '#FF0077', '#FF88AA'], // Pinks and reds
+                shapes: ['circle', 'heart'], // Include heart shapes
+                scalar: 0.8, // Smaller particles
+            });
+
+            // Start falling petals animation after a short delay
+            setTimeout(createFallingPetals, 500); // Start petals after confetti
+        });
+
+        function createFallingPetals() {
+            const numPetals = 50; // Number of petals to fall continuously
+            const petalTypes = ['petal', 'petal type2', 'petal type3', 'petal heart'];
+
+            for (let i = 0; i < numPetals; i++) {
+                const petal = document.createElement('div');
+                const type = petalTypes[Math.floor(Math.random() * petalTypes.length)];
+                petal.className = type;
+
+                const size = Math.random() * 20 + 10; // Petal size between 10px and 30px
+                petal.style.width = size + 'px';
+                petal.style.height = (type.includes('heart') ? size : Math.random() * size * 0.8 + size * 0.5) + 'px'; // Hearts are square, petals vary in height
+
+                petal.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+                petal.style.animationDuration = Math.random() * 8 + 6 + 's'; // Fall duration 6-14s
+                petal.style.animationDelay = Math.random() * 5 + 's'; // Stagger start times
+                petal.style.opacity = Math.random() * 0.7 + 0.3; // Vary transparency
+                petal.style.transform = `rotate(${Math.random() * 360}deg)`; // Random initial rotation
+
+                body.appendChild(petal);
+
+                // Remove petals after they fall off screen to prevent clutter
+                petal.addEventListener('animationend', () => {
+                    petal.remove();
+                    // Recreate a petal to make it continuous
+                    createSinglePetal();
+                });
+            }
+        }
+
+        // Function to create a single petal, used for continuous falling
+        function createSinglePetal() {
+            const petal = document.createElement('div');
+            const petalTypes = ['petal', 'petal type2', 'petal type3', 'petal heart'];
+            const type = petalTypes[Math.floor(Math.random() * petalTypes.length)];
+            petal.className = type;
+
+            const size = Math.random() * 20 + 10;
+            petal.style.width = size + 'px';
+            petal.style.height = (type.includes('heart') ? size : Math.random() * size * 0.8 + size * 0.5) + 'px';
+
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = Math.random() * 8 + 6 + 's';
+            petal.style.animationDelay = '0s'; // No initial delay for new petals
+            petal.style.opacity = Math.random() * 0.7 + 0.3;
+            petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+            body.appendChild(petal);
+
+            petal.addEventListener('animationend', () => {
+                petal.remove();
+                createSinglePetal(); // Create another one
+            });
+        }
+    </script>
+</body>
+</html>
